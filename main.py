@@ -5,14 +5,9 @@ from db.models import Guild, Player, Race, Skill
 
 def main() -> None:
     with open("players.json", "r") as file:
-        data = json.load(file)
+        players_data = json.load(file)
 
-    players_data = data
-
-    if isinstance(data, dict):
-        players_data = data.values()
-
-    for player_data in players_data:
+    for nickname, player_data in players_data.items():
         race_data = player_data["race"]
 
         race, _ = Race.objects.get_or_create(
@@ -43,7 +38,7 @@ def main() -> None:
             )
 
         Player.objects.get_or_create(
-            nickname=player_data["nickname"],
+            nickname=nickname,
             defaults={
                 "email": player_data["email"],
                 "bio": player_data["bio"],
