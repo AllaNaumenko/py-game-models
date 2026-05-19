@@ -7,7 +7,10 @@ def main() -> None:
     with open("players.json", "r") as file:
         data = json.load(file)
 
-    players_data = data["players"]
+    if isinstance(data, list):
+        players_data = data
+    else:
+        players_data = data.get("players", [])
 
     for player_data in players_data:
         race_data = player_data["race"]
@@ -15,11 +18,11 @@ def main() -> None:
         race, _ = Race.objects.get_or_create(
             name=race_data["name"],
             defaults={
-                "description": race_data["description"],
+                "description": race_data.get("description", ""),
             },
         )
 
-        for skill_data in race_data["skills"]:
+        for skill_data in race_data.get("skills", []):
             Skill.objects.get_or_create(
                 name=skill_data["name"],
                 defaults={
