@@ -1,20 +1,22 @@
+# main.py
+
 import json
 
-from db.models import Race, Skill, Guild, Player
+from db.models import Guild, Player, Race, Skill
 
 
 def main() -> None:
     with open("players.json", "r") as file:
-        players_data = json.load(file)
+        data = json.load(file)
 
-    for player_data in players_data:
+    for player_data in data["players"]:
         race_data = player_data["race"]
 
         race, _ = Race.objects.get_or_create(
             name=race_data["name"],
             defaults={
-                "description": race_data.get("description", "")
-            }
+                "description": race_data.get("description", ""),
+            },
         )
 
         for skill_data in race_data.get("skills", []):
@@ -22,8 +24,8 @@ def main() -> None:
                 name=skill_data["name"],
                 defaults={
                     "bonus": skill_data["bonus"],
-                    "race": race
-                }
+                    "race": race,
+                },
             )
 
         guild = None
@@ -33,8 +35,8 @@ def main() -> None:
             guild, _ = Guild.objects.get_or_create(
                 name=guild_data["name"],
                 defaults={
-                    "description": guild_data.get("description")
-                }
+                    "description": guild_data.get("description"),
+                },
             )
 
         Player.objects.get_or_create(
@@ -43,8 +45,8 @@ def main() -> None:
                 "email": player_data["email"],
                 "bio": player_data["bio"],
                 "race": race,
-                "guild": guild
-            }
+                "guild": guild,
+            },
         )
 
 
