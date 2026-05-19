@@ -7,10 +7,10 @@ def main() -> None:
     with open("players.json", "r") as file:
         data = json.load(file)
 
-    if isinstance(data, list):
-        players_data = data
-    else:
-        players_data = data.get("players", [])
+    players_data = data
+
+    if isinstance(data, dict):
+        players_data = data.values()
 
     for player_data in players_data:
         race_data = player_data["race"]
